@@ -1,0 +1,137 @@
+#include <iostream>
+using namespace std;
+
+
+void needBanker(int n,int m,int alloc[10][10],int avail[10],int max[][10])
+{
+ int k,i,j;
+ int mr[n], ans[n], ind = 0;
+
+	 for (k = 0; k < n; k++) // marker to check which process are completed
+	 {
+	 mr[k] = 0;
+	 }
+	 int need[10][10]; //calculate need matrix
+	 for (i = 0; i < n; i++)
+	 {
+	 for (j = 0; j < m; j++)
+	 need[i][j] = max[i][j] - alloc[i][j];
+	 }
+	 cout<<"\nThe Need Matrix is as follows:";
+	 for(int i=0;i<n;i++)
+	 {
+	 cout<<endl;
+	 for(int j=0;j<m;j++)
+	 cout<<"\t"<<need[i][j];
+	 }
+
+ int y = 0;
+ for (k = 0; k < n; k++) //to check need < avialaibility
+ {
+ for (i = 0; i < n; i++)
+ {
+ if (mr[i] == 0)
+ {
+ int flag = 0;
+ for (j = 0; j < m; j++)
+ {
+ if (need[i][j] > avail[j])
+ {
+ flag = 1;
+ break;
+ }
+ }
+ if (flag == 0)
+ {
+ ans[ind++] = i;
+ for (y = 0; y < m; y++)
+ avail[y] += alloc[i][y];
+ mr[i] = 1;
+ }
+ }
+ }
+ }
+ cout << "\nThe Safe Sequence is as follows:" << endl;
+ for (i = 0; i < n - 1; i++)
+ cout << " P" << ans[i] << " ->";
+ cout << " P" << ans[n - 1] << endl;
+}
+
+
+void request(int m,int need[10][10],int alloc[10][10],int avail[10],int n,int
+	max[10][10])
+	{
+		 int rmat[1][10];
+		 int pid;
+		 cout<<"\nEnter additional resource request for the process:"<<endl;
+		 cout<<"Enter process name:";
+		 cin>>pid;
+		 for (int i = 0; i < m; i++)
+		 {
+		 cout<<"\nEnter resource request for resource "<< i + 1<<" :";
+		 cin>>rmat[0][i];
+	 }
+	
+	 for (int i = 0; i < m; i++)
+	 {
+		 if (rmat[0][i] > need[pid][i])
+		 {
+		 cout<<"\nDeadlock has occured";
+		 break;
+		 }
+	 }
+	
+	 for (int i = 0; i < m; i++)
+	 {
+		 if(rmat[0][i] > avail[i])
+		 {
+		 cout<<"\nResources are unavailable"<<endl;
+		 break;
+		
+		 }
+	 }
+	
+	 for (int i = 0; i < m; i++)
+	 {
+		 avail[i] -= rmat[0][i];
+		 alloc[pid][i] += rmat[0][i];
+		 need[pid][i] -= rmat[0][i];
+	 }
+	
+	 cout<<"\nApplying Banker's Algo once again:";
+	 needBanker(n,m,alloc,avail,max);
+}
+
+
+int main()
+{
+ int n, m, i, j, k,c,pno;
+ cout<<"No of processes:";
+ cin>>n;
+ cout<<"No of resources:";
+ cin>>m;
+int alloc[10][10],max[10][10],avail[10],need[10][10];
+ cout<<"Process Allocation matrix:"<<endl;
+ for(int i=0;i<n;i++)
+ for(int j=0;j<m;j++)
+ cin>>alloc[i][j];
+ cout<<"Max Allocation matrix:"<<endl;
+ for(int i=0;i<n;i++)
+ for(int j=0;j<m;j++)
+ cin>>max[i][j];
+ cout<<"Availibilty matrix:"<<endl;
+ for(int j=0;j<m;j++)
+ cin>>avail[j];
+needBanker(n,m,alloc,avail,max);
+cout<<"\nDo you want to provide a resource request for a process?"<<endl;
+cout<<"Press 1 for Yes. Press 0 for No"<<endl;
+cout<<"Enter your choice:";
+cin>>c;
+if(c==1)
+{
+ request(m,need,alloc,avail,n,max);
+}
+else
+ exit(0);
+return 0;
+}

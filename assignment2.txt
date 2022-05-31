@@ -1,0 +1,46 @@
+i=1
+
+while(i==1)
+do
+echo "1.List the files & directory 2.Create Directory 3.Create File 4.Rename
+File
+5.Delete File
+6.Display File Content"
+read ch
+case $ch in
+1) echo "Listing Directory Contents"
+ls
+;;
+2) echo "Enter Directory Name : "
+read directoryName
+mkdir $directoryName
+echo "Directory Created Successfully!"
+;;
+3)echo "Enter File Name : "
+
+read filename
+touch $filename
+echo "File Created Successfully!"
+;;
+4)echo "Enter File Name to be Renamed"
+read filename1
+echo "File New Name"
+read filename2
+mv $filename1 $filename2
+echo "File Renamed Successfully"
+;;
+5)echo "Enter File Name : "
+read filename
+rm $filename
+echo "File Deleted Successfully!"
+;;
+6)echo "Enter File Name : "
+read filename
+echo "Displaying File Content : "
+cat $filename
+;;
+*)echo "Invalid Choice"
+esac
+echo "Do you want to continue (1/0) : "
+read i
+done

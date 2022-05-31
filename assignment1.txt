@@ -1,0 +1,42 @@
+1.
+# iterate through current jpg file
+# and rename them to start with today's date
+for file in $(ls *.jpg)
+do
+ mv $file $(date +%F)-$file
+done
+
+2.
+find . -maxdepth 1 -type f -size 0 -exec rm {} \;
+
+OR
+
+echo "Enter filename"
+read filename
+if [ -e $filename ]
+
+then
+echo "File exists"
+if [ -s $filename ]
+then
+echo "Filesize gretaer than zero"
+else
+rm $filename
+echo “File Deleted”
+fi
+else
+echo "File doesn't exists"
+fi
+
+3.
+file=$1;
+cat -n $file > .a.tmp
+sort -k 2 .a.tmp > .b.tmp
+uniq -f 1 .b.tmp > .a.tmp
+sort -n .a.tmp > .b.tmp
+cut -f 2 .b.tmp > .a.tmp
+echo "The file $file has been cleaned"
+cat .a.tmp > $file
+rm .a.tmp .b.tmp
+echo "Cleaned file is: "
+cat $file
